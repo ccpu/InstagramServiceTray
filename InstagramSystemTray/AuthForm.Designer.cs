@@ -54,6 +54,7 @@
             this.SubmitPhoneChallengeButton = new System.Windows.Forms.Button();
             this.txtSubmitPhoneForChallenge = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.lblError = new System.Windows.Forms.Label();
             this.SelectMethodGroupBox.SuspendLayout();
             this.VerifyCodeGroupBox.SuspendLayout();
             this.TwoFactorGroupBox.SuspendLayout();
@@ -63,7 +64,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(16, 37);
+            this.label2.Location = new System.Drawing.Point(16, 56);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(56, 13);
             this.label2.TabIndex = 4;
@@ -72,7 +73,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 11);
+            this.label1.Location = new System.Drawing.Point(16, 30);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(58, 13);
             this.label1.TabIndex = 3;
@@ -80,21 +81,22 @@
             // 
             // txtUser
             // 
-            this.txtUser.Location = new System.Drawing.Point(80, 7);
+            this.txtUser.Location = new System.Drawing.Point(80, 26);
             this.txtUser.Name = "txtUser";
             this.txtUser.Size = new System.Drawing.Size(316, 20);
             this.txtUser.TabIndex = 5;
             // 
             // txtPass
             // 
-            this.txtPass.Location = new System.Drawing.Point(80, 36);
+            this.txtPass.Location = new System.Drawing.Point(80, 55);
             this.txtPass.Name = "txtPass";
+            this.txtPass.PasswordChar = '*';
             this.txtPass.Size = new System.Drawing.Size(316, 20);
             this.txtPass.TabIndex = 6;
             // 
             // LoginButton
             // 
-            this.LoginButton.Location = new System.Drawing.Point(321, 62);
+            this.LoginButton.Location = new System.Drawing.Point(321, 81);
             this.LoginButton.Name = "LoginButton";
             this.LoginButton.Size = new System.Drawing.Size(75, 23);
             this.LoginButton.TabIndex = 7;
@@ -132,7 +134,7 @@
             this.SelectMethodGroupBox.Controls.Add(this.label3);
             this.SelectMethodGroupBox.Controls.Add(this.RadioVerifyWithEmail);
             this.SelectMethodGroupBox.Controls.Add(this.RadioVerifyWithPhoneNumber);
-            this.SelectMethodGroupBox.Location = new System.Drawing.Point(65, 154);
+            this.SelectMethodGroupBox.Location = new System.Drawing.Point(65, 173);
             this.SelectMethodGroupBox.Name = "SelectMethodGroupBox";
             this.SelectMethodGroupBox.Size = new System.Drawing.Size(289, 187);
             this.SelectMethodGroupBox.TabIndex = 10;
@@ -168,7 +170,7 @@
             this.VerifyCodeGroupBox.Controls.Add(this.label4);
             this.VerifyCodeGroupBox.Controls.Add(this.txtVerifyCode);
             this.VerifyCodeGroupBox.Controls.Add(this.LblForSmsEmail);
-            this.VerifyCodeGroupBox.Location = new System.Drawing.Point(65, 154);
+            this.VerifyCodeGroupBox.Location = new System.Drawing.Point(65, 173);
             this.VerifyCodeGroupBox.Name = "VerifyCodeGroupBox";
             this.VerifyCodeGroupBox.Size = new System.Drawing.Size(289, 187);
             this.VerifyCodeGroupBox.TabIndex = 11;
@@ -224,7 +226,7 @@
             // 
             // GetFeedButton
             // 
-            this.GetFeedButton.Location = new System.Drawing.Point(174, 91);
+            this.GetFeedButton.Location = new System.Drawing.Point(174, 110);
             this.GetFeedButton.Name = "GetFeedButton";
             this.GetFeedButton.Size = new System.Drawing.Size(222, 23);
             this.GetFeedButton.TabIndex = 12;
@@ -235,7 +237,7 @@
             // 
             // RtBox
             // 
-            this.RtBox.Location = new System.Drawing.Point(4, 131);
+            this.RtBox.Location = new System.Drawing.Point(4, 150);
             this.RtBox.Name = "RtBox";
             this.RtBox.Size = new System.Drawing.Size(406, 441);
             this.RtBox.TabIndex = 13;
@@ -247,7 +249,7 @@
             this.TwoFactorGroupBox.Controls.Add(this.TwoFactorButton);
             this.TwoFactorGroupBox.Controls.Add(this.txtTwoFactorCode);
             this.TwoFactorGroupBox.Controls.Add(this.label5);
-            this.TwoFactorGroupBox.Location = new System.Drawing.Point(71, 210);
+            this.TwoFactorGroupBox.Location = new System.Drawing.Point(71, 229);
             this.TwoFactorGroupBox.Name = "TwoFactorGroupBox";
             this.TwoFactorGroupBox.Size = new System.Drawing.Size(274, 87);
             this.TwoFactorGroupBox.TabIndex = 14;
@@ -286,7 +288,7 @@
             this.SubmitPhoneChallengeGroup.Controls.Add(this.SubmitPhoneChallengeButton);
             this.SubmitPhoneChallengeGroup.Controls.Add(this.txtSubmitPhoneForChallenge);
             this.SubmitPhoneChallengeGroup.Controls.Add(this.label6);
-            this.SubmitPhoneChallengeGroup.Location = new System.Drawing.Point(71, 206);
+            this.SubmitPhoneChallengeGroup.Location = new System.Drawing.Point(71, 225);
             this.SubmitPhoneChallengeGroup.Name = "SubmitPhoneChallengeGroup";
             this.SubmitPhoneChallengeGroup.Size = new System.Drawing.Size(274, 87);
             this.SubmitPhoneChallengeGroup.TabIndex = 15;
@@ -320,11 +322,22 @@
             this.label6.TabIndex = 3;
             this.label6.Text = "Phone number:";
             // 
+            // lblError
+            // 
+            this.lblError.AutoSize = true;
+            this.lblError.ForeColor = System.Drawing.Color.Red;
+            this.lblError.Location = new System.Drawing.Point(18, 6);
+            this.lblError.Name = "lblError";
+            this.lblError.Size = new System.Drawing.Size(41, 13);
+            this.lblError.TabIndex = 16;
+            this.lblError.Text = "error-lbl";
+            // 
             // AuthForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(416, 125);
+            this.ClientSize = new System.Drawing.Size(427, 150);
+            this.Controls.Add(this.lblError);
             this.Controls.Add(this.SubmitPhoneChallengeGroup);
             this.Controls.Add(this.TwoFactorGroupBox);
             this.Controls.Add(this.RtBox);
@@ -341,6 +354,7 @@
             this.Name = "AuthForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Login";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AuthForm_FormClosing);
             this.SelectMethodGroupBox.ResumeLayout(false);
             this.SelectMethodGroupBox.PerformLayout();
             this.VerifyCodeGroupBox.ResumeLayout(false);
@@ -382,6 +396,7 @@
         private System.Windows.Forms.Button SubmitPhoneChallengeButton;
         private System.Windows.Forms.TextBox txtSubmitPhoneForChallenge;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lblError;
     }
 }
 

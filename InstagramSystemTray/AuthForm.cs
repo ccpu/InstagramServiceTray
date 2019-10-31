@@ -9,6 +9,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,7 @@ using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Classes.SessionHandlers;
 using InstagramApiSharp.Logger;
+using InstagramSystemTray.Models;
 
 /////////////////////////////////////////////////////////////////////
 ////////////////////// IMPORTANT NOTE ///////////////////////////////
@@ -32,56 +34,17 @@ namespace InstagramSystemTray
 {
     public partial class AuthForm : Form
     {
-        // There are two different type of challenge is exists!
-        //  - 1. You receive challenge while you already logged in:
-        //       "This is me" or "This is not me" option!
-        //       If some suspecious login happend, this will promp up, and you should accept it to get rid of it
-        //
-        //       Use Task<IResult<InstaLoggedInChallengeDataInfo>> GetLoggedInChallengeDataInfoAsync() to get information like coordinate of
-        //       login request and more data info
-        //
-        //       Use Task<IResult<bool>> AcceptChallengeAsync() to accept that you are the ONE that requests for login!
-
-
-        //  - 2. You receive challenge while you calling LoginAsync
-
-        // Note: new challenge require functions is very easy to use.
-        // there are 5 functions I've added to IInstaApi for challenge require (checkpoint_endpoint)
-
-        // here:
-        // 1. Task<IResult<ChallengeRequireVerifyMethod>> GetChallengeRequireVerifyMethodAsync();
-        // If your login needs challenge, first you should call this function.
-        // Note: if you call this and SubmitPhoneRequired was true, you should sumbit phone number
-        // with this function:
-        // Task<IResult<ChallengeRequireSMSVerify>> SubmitPhoneNumberForChallengeRequireAsync();
-
-
-        // 2. Task<IResult<ChallengeRequireSMSVerify>> RequestVerifyCodeToSMSForChallengeRequireAsync();
-        // This function will send you verification code via SMS.
-
-
-        // 3. Task<IResult<ChallengeRequireEmailVerify>> RequestVerifyCodeToEmailForChallengeRequireAsync();
-        // This function will send you verification code via Email.
-
-
-        // 4. Task<IResult<ChallengeRequireVerifyMethod>> ResetChallengeRequireVerifyMethodAsync();
-        // Reset challenge require.
-        // Example: if your account has phone number and email, and you request for email(or phone number)
-        // and now you want to change it to another one, you should first call this function,
-        // then you have to call GetChallengeRequireVerifyMethodAsync and after that you can change your method!!!
-
-
-        // 5. Task<IResult<ChallengeRequireVerifyCode>> VerifyCodeForChallengeRequireAsync(string verifyCode);
-        // Verify sms or email verification code for login.
-
+        private readonly string _userName;
+        private readonly Action<InstaApiInstance> _callback;
         private const string AppName = "Login Form";
-        private const string StateFile = "state.bin";
         private static IInstaApi InstaApi;
         private readonly Size ChallengeSize = new Size(432, 604);
         private readonly Size NormalSize = new Size(432, 164);
 
-        public AuthForm()
+        public AuthForm(string userName, Action<InstaApiInstance> callback)
         {
+            _userName = userName;
+            _callback = callback;
             InitializeComponent();
             Load += Form1_Load;
         }
@@ -89,15 +52,19 @@ namespace InstagramSystemTray
         private void Form1_Load(object sender, EventArgs e)
         {
             Size = NormalSize;
+            Text = "Login to " + _userName;
+            txtUser.Text = _userName;
+            txtUser.Enabled = false;
+            lblError.Text = "";
         }
 
         private async void LoginButton_Click(object sender, EventArgs e)
         {
             Size = NormalSize;
-
+            lblError.Text = "";
             InstaApi = Helper.InstaApi.GetInstaApi(txtUser.Text, txtPass.Text);
 
-            Text = $"{AppName} Connecting";
+            Text = $"{_userName} Connecting";
 
             if (!InstaApi.IsUserAuthenticated)
             {
@@ -106,9 +73,10 @@ namespace InstagramSystemTray
                 if (logInResult.Succeeded)
                 {
                     GetFeedButton.Visible = true;
-                    Text = $"{AppName} Connected";
+                    Text = $"{_userName} Connected";
                     // Save session 
                     SaveSession();
+                    _callback(new InstaApiInstance { Api = InstaApi, Account = _userName });
                 }
                 else
                 {
@@ -155,11 +123,16 @@ namespace InstagramSystemTray
                         TwoFactorGroupBox.Visible = true;
                         Size = ChallengeSize;
                     }
+                    else
+                    {
+                        lblError.Text = logInResult.Value.ToString();
+                    }
+
                 }
             }
             else
             {
-                Text = $"{AppName} Connected";
+                Text = $"{_userName} Connected";
                 GetFeedButton.Visible = true;
             }
         }
@@ -324,7 +297,7 @@ namespace InstagramSystemTray
                     GetFeedButton.Visible = true;
                     // Save session
                     SaveSession();
-                    Text = $"{AppName} Connected";
+                    Text = $"{_userName} Connected";
                 }
                 else
                 {
@@ -364,7 +337,7 @@ namespace InstagramSystemTray
                 Size = ChallengeSize;
                 TwoFactorGroupBox.Visible = false;
                 GetFeedButton.Visible = true;
-                Text = $"{AppName} Connected";
+                Text = $"{_userName} Connected";
                 Size = NormalSize;
             }
             else
@@ -511,6 +484,14 @@ namespace InstagramSystemTray
             //    state.Seek(0, SeekOrigin.Begin);
             //    state.CopyTo(fileStream);
             //}
+        }
+
+        private void AuthForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!InstaApi.IsUserAuthenticated)
+            {
+                _callback(null);
+            }
         }
     }
 

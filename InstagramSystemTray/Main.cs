@@ -108,12 +108,23 @@ namespace InstagramSystemTray
             ni.ContextMenuStrip = new ContextMenus().Create();
             ni.Icon = Resources.Instagram;
             ni.Text = "not connected";
-            var insApi = InstaApi.GetInstaApi();
-            if (!insApi.IsUserAuthenticated)
+            var settings = AppSettings.GetSetting();
+            InstaApi.SetApiInstances(settings.Accounts);
+            if (InstaApi.ApiInstances.Count == 0)
             {
-                new AuthForm().Show();
+                new SettingForm().Show();
             }
+
+            //            if (settings.Accounts == null || settings.Accounts.Count < 1)
+            //            {
+            //                new SettingForm().Show();
+            //                //                MessageBox.Show("Please provide instagram account(s).");
+            //            }
+
+            //            var insApi = InstaApi.GetInstaApi();
+            //            if (!insApi.IsUserAuthenticated) new AuthForm().Show();
         }
+
 
         //
         //        /// <summary>

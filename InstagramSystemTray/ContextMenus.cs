@@ -25,12 +25,12 @@ namespace InstagramSystemTray
             // Add the default menu options.
             var menu = new ContextMenuStrip();
 
-            var item = new ToolStripMenuItem {Text = "Settings"};
+            var item = new ToolStripMenuItem { Text = "Settings" };
             item.Click += new EventHandler(Setting_Click);
             item.Image = Resources.setting;
             menu.Items.Add(item);
 
-            item = new ToolStripMenuItem {Text = "Logs"};
+            item = new ToolStripMenuItem { Text = "Logs" };
             item.Click += new EventHandler(Logs_Click);
             item.Image = Resources.log;
             menu.Items.Add(item);
@@ -40,7 +40,7 @@ namespace InstagramSystemTray
             menu.Items.Add(sep);
 
             //// Exit.
-            item = new ToolStripMenuItem {Text = "Exit"};
+            item = new ToolStripMenuItem { Text = "Exit" };
             item.Click += new System.EventHandler(Exit_Click);
             item.Image = Resources.exit;
             menu.Items.Add(item);
@@ -66,7 +66,7 @@ namespace InstagramSystemTray
             if (!_isSettingLoaded)
             {
                 _isSettingLoaded = true;
-//                new SettingForm().Show();
+                new SettingForm().Show();
                 _isSettingLoaded = false;
             }
         }
